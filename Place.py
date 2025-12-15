@@ -13,6 +13,12 @@ class Place:
     def get_city(self):
         return self.__city
     
+    def get_danger_level(self):
+        return self.__danger_level
+    
+    def get_description(self):
+        return self.__description
+    
     def __str__(self):
         s = f"{self.__name} is a place in {self.__city}. "
         if self.__danger_level != None:
