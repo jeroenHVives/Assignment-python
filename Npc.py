@@ -5,7 +5,8 @@ class Npc:
         self.__name = name
         self.__race = race
         self.__role = role
-        self.__gender = gender
+        if gender in (None, "M", "F", "X"):
+            self.__gender = gender
         self.__age = age
         self.__place = place
         self.__id = id_npc
@@ -36,9 +37,9 @@ class Npc:
         s = f"{self.__name} is a {self.__role} from the {self.__race} race."
         if(self.__gender != None):
             s+= " He is "
-            if(self.__gender == "m"):
+            if(self.__gender == "M"):
                 s += "male "
-            elif(self.__gender == "f"):
+            elif(self.__gender == "F"):
                 s += "female "
             else:
                 s += "x "

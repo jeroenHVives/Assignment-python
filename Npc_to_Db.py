@@ -18,7 +18,7 @@ class Npc_to_Db():
         p2db = Place_to_Db.Place_to_Db()
         place = p2db.get_place_by_id(result[6])
         p2db.close()
-        npc = Npc.Npc(result[1], result[2], result[3], result[4], result[5], place, result[0])
+        npc = Npc.Npc(result[1], result[2], result[5], result[3], result[4], place, result[0])
         return npc
     
     def new_npc(self, npc):

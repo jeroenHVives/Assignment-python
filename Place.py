@@ -3,7 +3,8 @@ class Place:
     def __init__(self, name, city, danger_level = None, description = None, id_place = None):
         self.__name = name
         self.__city = city
-        self.__danger_level = danger_level
+        if (danger_level >= 1 and danger_level <= 10 or danger_level == None):
+            self.__danger_level = danger_level
         self.__description = description
         self.__id = id_place
         
