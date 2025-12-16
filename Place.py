@@ -19,6 +19,9 @@ class Place:
     def get_description(self):
         return self.__description
     
+    def get_id(self):
+        return self.__id
+    
     def __str__(self):
         s = f"{self.__name} is a place in {self.__city}. "
         if self.__danger_level != None:
