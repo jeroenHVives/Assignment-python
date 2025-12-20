@@ -161,5 +161,17 @@ elif sys.argv[1] == "-edit":
             sys.exit(-1)
     else:
         print(f"{sys.argv[2]} is not a valid answer.Type True is you want to change only one row and False if you want to change multiple rows.")
+#python NpcManager.py -get table
+elif sys.argv[1] == "-get":
+    if sys.argv[2] == "place":
+        p2db = Place_to_Db.Place_to_Db()
+        place_name = input("What's the name of the place(s) you would like to get?")
+        p2db.get_places(place_name)
+    elif sys.argv[2] == "npc":
+        n2db = Npc_to_Db.Npc_to_Db()
+        npc_name = input("What's the name of the npc(s) you would like to get?")
+        n2db.get_npcs(npc_name)
+    else:
+        print(f"{sys.argv[2]} does not exist. The only tables that exist are npc and place.")
 
      
