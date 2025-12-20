@@ -122,6 +122,44 @@ elif sys.argv[1] == "-new":
         npc = Npc.Npc(name, race, role, gender, int(age), place)
         n2db = Npc_to_Db.Npc_to_Db()
         n2db.new_npc(npc)
-            
+#python NpcManager.py -edit one_edit table
+#one_edit is a boolean that decides if one row or multiple rows needs to be edited 
+elif sys.argv[1] == "-edit":
+    if sys.argv[2] == "True":
+        if sys.argv[3] == "place":
+            p2db = Place_to_Db.Place_to_Db()
+            place_name = input("What's the name of the place you would like to change?")
+            key = input(f"What would you like to change about {place_name}? (name, city, danger_level or description)")
+            value = input(f"What should the value of {key} be instead?")
+            p2db.update_place(place_name, key, value)
+        elif sys.argv[3] == "npc":
+            n2db = Npc_to_Db.Npc_to_Db()
+            npc_name = input("What's the name of the npc you would like to change?")
+            key = input(f"What would you like to change about {npc_name}? (name, race, gender, age, role, place)")
+            value = input(f" what should the value of {key} be instead?")
+            n2db.update_npc(npc_name, key, value)
+        else:
+            print(f"{sys.argv[3]} does not exist. The only tables that exist are npc and place.")
+            sys.exit(-1)
+    elif sys.argv[2] == "False":
+        if sys.argv[3] == "place":
+            p2db = Place_to_Db.Place_to_Db()
+            search_key = input("Which field should be used to find the record? (name, city, danger_level or description) ")
+            search_value = input(f"What is the current value of {search_key} you want to search for? ")
+            replace_key = input("Which field would you like to update? (name, city, danger_level or description) ")
+            replace_value = input(f"What should the new value of {replace_key} be instead? ")
+            p2db.update_all(search_key, search_value, replace_key, replace_value)
+        elif sys.argv[3] == "npc":
+            n2db = Npc_to_Db.Npc_to_Db()
+            search_key = input("Which field should be used to find the record? (name, race, gender, age, role, place) ")
+            search_value = input(f"What is the current value of {search_key} you want to search for? ")
+            replace_key = input("Which field would you like to update? (name, race, gender, age, role, place) ")
+            replace_value = input(f"What should the new value of {replace_key} be instead? ")
+            n2db.update_all(search_key, search_value, replace_key, replace_value)
+        else:
+            print(f"{sys.argv[3]} does not exist. The only tables that exist are npc and place.")
+            sys.exit(-1)
+    else:
+        print(f"{sys.argv[2]} is not a valid answer.Type True is you want to change only one row and False if you want to change multiple rows.")
 
-
+     

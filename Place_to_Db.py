@@ -11,10 +11,14 @@ class Place_to_Db():
         results = self.__cursor.fetchall()
         return results
 
-    def get_place(self, place_name):
+    def get_places(self, place_name):
         query = "SELECT * FROM place where name == ?"
         self.__cursor.execute(query, (place_name,))
         results = self.__cursor.fetchall()
+        return results
+
+    def get_place(self, place_name):
+        results = self.get_places(place_name)
         for row in results:
             print(row)
         query = "SELECT * FROM place where id == ?"

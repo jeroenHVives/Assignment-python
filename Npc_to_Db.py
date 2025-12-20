@@ -11,10 +11,14 @@ class Npc_to_Db():
         results = self.__cursor.fetchall()
         return results
 
-    def get_npc(self, npc_name):
+    def get_npcs(self, npc_name):
         query = "SELECT * FROM npc where name == ?"
         self.__cursor.execute(query, (npc_name,))
         results = self.__cursor.fetchall()
+        return results
+
+    def get_npc(self, npc_name):
+        results = self.get_npcs(npc_name)
         for row in results:
             print(row)
         query = "SELECT * FROM npc where id == ?"
