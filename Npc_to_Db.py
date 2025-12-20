@@ -4,6 +4,12 @@ class Npc_to_Db():
     def __init__(self):
         self.__connection = sqlite3.connect("npc_manager.db")
         self.__cursor = self.__connection.cursor()
+        
+    def get_all_npcs(self):
+        query = "SELECT * from npc"
+        self.__cursor.execute(query)
+        results = self.__cursor.fetchall()
+        return results
 
     def get_npc(self, npc_name):
         query = "SELECT * FROM npc where name == ?"

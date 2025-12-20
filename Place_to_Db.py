@@ -5,6 +5,12 @@ class Place_to_Db():
         self.__connection = sqlite3.connect("npc_manager.db")
         self.__cursor = self.__connection.cursor()
 
+    def get_all_places(self):
+        query = "SELECT * from place"
+        self.__cursor.execute(query)
+        results = self.__cursor.fetchall()
+        return results
+
     def get_place(self, place_name):
         query = "SELECT * FROM place where name == ?"
         self.__cursor.execute(query, (place_name,))
