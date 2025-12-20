@@ -173,5 +173,19 @@ elif sys.argv[1] == "-get":
         n2db.get_npcs(npc_name)
     else:
         print(f"{sys.argv[2]} does not exist. The only tables that exist are npc and place.")
-
+#Python NpcManager.py 
+else:
+    table = input("would you like to get info about an npc or a place?(type npc or place)")
+    if table == "npc":
+        npc_name = input("What's the name of the npc you would like to get information about?")
+        n2db = Npc_to_Db.Npc_to_Db()
+        npc = n2db.get_npc(npc_name)
+        print(npc)
+    elif table == "npc":
+        place_name = input("What's the name of the place you would like to get information about?")
+        p2db = Place_to_Db.Place_to_Db()
+        place = p2db.get_place(place_name)
+        print(place)
+    else:
+        print(f"{table} does not exist. The only tables that exist are npc and place.")
      
