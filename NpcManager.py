@@ -1,4 +1,4 @@
-import sys, Place_to_Db, Npc_to_Db
+import sys, Place_to_Db, Npc_to_Db, Place, Npc
 import pandas as pd
 
 
@@ -89,6 +89,39 @@ elif sys.argv[1] == "-excel":
             print(f"File {sys.argv[3]} doesn't exists")
     else:
         print(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
-#pyhon NpcManager.py
+#pyhon NpcManager.py -new table
+elif sys.argv[1] == "-new":
+    if sys.argv[2] == "place":
+        name = input("What's the place's name?")
+        city = input(f"In what city is this {name}?")
+        danger_level = input("How dangerous is {name} on a scale from 1 to 10?(if you don't know yet type 0)")
+        description = input(f"Describe {name}:(if you have no description yet press enter)")
+        if(danger_level == 0):
+            danger_level = None
+        if(description == ""):
+            description = None 
+        place = Place.Place(name, city, int(danger_level), description)
+        p2db = Place_to_Db.Place_to_Db()
+        p2db.new_place(place)
+    if sys.argv[2] == "npc":
+        name = input("what's the npc's name?")
+        race = input(f"Of what race is {name}?")
+        gender = input(f"What gender is {name}? Use M for male, F for female and X for other. (press enter if you don't know yet)")
+        age = input(f"How old is {name}? (if you're not sure yet press enter)")
+        role = input(f"What role does {name} have?")
+        place_name = input(f"At what place is {name} right now? (if you don't know press enter)")
+        if gender == "":
+            gender = None
+        if age == "":
+            age = None
+        if place_name == "":
+            place = None
+        else:
+            p2db = Place_to_Db.Place_to_Db()
+            place = p2db.get_place(place_name)
+        npc = Npc.Npc(name, race, role, gender, int(age), place)
+        n2db = Npc_to_Db.Npc_to_Db()
+        n2db.new_npc(npc)
+            
 
 

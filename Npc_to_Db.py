@@ -29,7 +29,10 @@ class Npc_to_Db():
     
     def new_npc(self, npc):
         query = "INSERT INTO npc (name, race, gender, age, role, place_id) VALUES (?,?,?,?, ?, ?);"
-        self.__cursor.execute(query, (npc.get_name(), npc.get_race(), npc.get_gender(), npc.get_age(), npc.get_role(), npc.get_place().get_id()))
+        if(npc.get_place() != None):
+            self.__cursor.execute(query, (npc.get_name(), npc.get_race(), npc.get_gender(), npc.get_age(), npc.get_role(), npc.get_place().get_id()))
+        else:
+            self.__cursor.execute(query, (npc.get_name(), npc.get_race(), npc.get_gender(), npc.get_age(), npc.get_role(), None))
         self.__connection.commit()
         
     def update_npc(self, npc_name, key, value):
