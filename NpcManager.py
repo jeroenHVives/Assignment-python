@@ -44,7 +44,10 @@ def npcs_to_df():
         roles.append(result[5])
         p2db = Place_to_Db.Place_to_Db()
         place = p2db.get_place_by_id(result[6])
-        place_names.append(place.get_name())
+        if place != None:
+            place_names.append(place.get_name())
+        else:
+            place_names.append("")
     df = pd.DataFrame({
         "Id": ids,
         "Name": names,
@@ -56,6 +59,10 @@ def npcs_to_df():
     })
     return df
 
+def error(message):
+    print(message)
+    sys.exit(-1)
+
 #python NpcManager.py -csv table filename 
 if sys.argv[1] == "-csv":
     if sys.argv[2] == "place":
@@ -63,16 +70,15 @@ if sys.argv[1] == "-csv":
         try:
             df.to_csv(sys.argv[3], sep=',', index=False)
         except:
-            print(f"File {sys.argv[3]} doesn't exists")
+           error("Something went wrong. please try again.")
     elif sys.argv[2] == "npc":
         df = npcs_to_df()
         try:
             df.to_csv(sys.argv[3], sep=',', index=False)
         except:
-            print(f"File {sys.argv[3]} doesn't exists")
+            error("Something went wrong. please try again.")
     else:
-        print(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
-        sys.exit(-1)
+        error(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
 #python NpcManager.py -excel table filename
 elif sys.argv[1] == "-excel":
     if sys.argv[2] == "place":
@@ -80,21 +86,28 @@ elif sys.argv[1] == "-excel":
         try:
             df.to_excel(sys.argv[3], sheet_name="placeList", index=False)
         except:
-            print(f"File {sys.argv[3]} doesn't exists")
+            error("Something went wrong. please try again.")
+
     elif sys.argv[2] == "npc":
         df = npcs_to_df()
         try:
             df.to_excel(sys.argv[3], sheet_name="npcList", index=False)
         except:
-            print(f"File {sys.argv[3]} doesn't exists")
+            error("Something went wrong. please try again.")
     else:
-        print(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
+        error(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
 #pyhon NpcManager.py -new table
 elif sys.argv[1] == "-new":
     if sys.argv[2] == "place":
         name = input("What's the place's name?")
+        if name == "":
+            error("Name cannot be empty.")
         city = input(f"In what city is this {name}?")
+        if city == "":
+            error("City cannot be empty.")
         danger_level = input("How dangerous is {name} on a scale from 1 to 10?(if you don't know yet type 0)")
+        if danger_level == "":
+            error("Danger level cannot be empty.")
         description = input(f"Describe {name}:(if you have no description yet press enter)")
         if(danger_level == 0):
             danger_level = None
@@ -105,21 +118,25 @@ elif sys.argv[1] == "-new":
         p2db.new_place(place)
     if sys.argv[2] == "npc":
         name = input("what's the npc's name?")
+        if name == "":
+            error("Name cannot be empty.")
         race = input(f"Of what race is {name}?")
+        if race == "":
+            error("Race cannot be empty.")
         gender = input(f"What gender is {name}? Use M for male, F for female and X for other. (press enter if you don't know yet)")
         age = input(f"How old is {name}? (if you're not sure yet press enter)")
         role = input(f"What role does {name} have?")
+        if role == "":
+            error("Role cannot be empty.")
         place_name = input(f"At what place is {name} right now? (if you don't know press enter)")
         if gender == "":
             gender = None
-        if age == "":
-            age = None
         if place_name == "":
             place = None
         else:
             p2db = Place_to_Db.Place_to_Db()
             place = p2db.get_place(place_name)
-        npc = Npc.Npc(name, race, role, gender, int(age), place)
+        npc = Npc.Npc(name, race, role, gender, int(age) if age != "" else None, place)
         n2db = Npc_to_Db.Npc_to_Db()
         n2db.new_npc(npc)
 #python NpcManager.py -edit one_edit table

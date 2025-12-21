@@ -1,4 +1,4 @@
-import sqlite3, Place
+import sqlite3, Place, sys
 
 class Place_to_Db():
     def __init__(self):
@@ -22,18 +22,29 @@ class Place_to_Db():
         for row in results:
             print(row)
         query = "SELECT * FROM place where id == ?"
-        self.__cursor.execute(query, (input("Give the first number of the place you would like to get from the above list:"),))
-        results = self.__cursor.fetchall()
-        result = results[0]
-        place = Place.Place(result[1], result[2], result[3], result[4], result[0])
-        return place
-    
+        place_id = input("Give the first number of the place you would like to get from the above list:")
+        correct_id = False
+        for row in results:
+            if place_id == row[0]:
+                correct_id = True
+        if correct_id:
+            self.__cursor.execute(query, (place_id,))
+            results = self.__cursor.fetchall()
+            result = results[0]
+            place = Place.Place(result[1], result[2], result[3], result[4], result[0])
+            return place
+        else:
+            print(f"{place_id} was not in the list.")
+            sys.exit(-1)
     def get_place_by_id(self, place_id):
         query = "SELECT * FROM place where id == ?"
         self.__cursor.execute(query, (place_id,))
         results = self.__cursor.fetchall()
-        result = results[0]
-        place = Place.Place(result[1], result[2], result[3], result[4], result[0])
+        if(len(results) != 0):
+            result = results[0]
+            place = Place.Place(result[1], result[2], result[3], result[4], result[0])
+        else:
+            place = None
         return place
     
     def new_place(self, place):
