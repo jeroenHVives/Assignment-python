@@ -137,7 +137,7 @@ elif arg1 == "-new":
         place = Place.Place(name, city, int(danger_level), description)
         p2db = Place_to_Db.Place_to_Db()
         p2db.new_place(place)
-    if sys.argv[2] == "npc":
+    elif sys.argv[2] == "npc":
         name = input("what's the npc's name?")
         if name == "":
             error("Name cannot be empty.")
@@ -160,6 +160,8 @@ elif arg1 == "-new":
         npc = Npc.Npc(name, race, role, gender, int(age) if age != "" else None, place)
         n2db = Npc_to_Db.Npc_to_Db()
         n2db.new_npc(npc)
+    else:
+        error(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
 #python NpcManager.py -edit one_edit table
 #one_edit is a boolean that decides if one row or multiple rows needs to be edited 
 elif arg1 == "-edit":
