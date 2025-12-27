@@ -23,10 +23,18 @@ class Place_to_Db():
             print(row)
         query = "SELECT * FROM place where id == ?"
         place_id = input("Give the first number of the place you would like to get from the above list:")
+        try:
+            place_id = int(place_id)
+        except:
+            print(f"{place_id} is not a number!")
+            sys.exit(-1)
         correct_id = False
-        for row in results:
-            if place_id == row[0]:
+        i= 0
+        while (i < len(results) and not correct_id):
+            row = results[i]
+            if int(place_id) == row[0]:
                 correct_id = True
+            i += 1
         if correct_id:
             self.__cursor.execute(query, (place_id,))
             results = self.__cursor.fetchall()
@@ -52,8 +60,20 @@ class Place_to_Db():
         self.__cursor.execute(query, (place.get_name(), place.get_city(), place.get_danger_level(), place.get_description()))
         self.__connection.commit()
         
+    def __check_restrictions(self, key, value):
+        if key == "danger_level":
+            try:
+               value = int(value)
+               if not (value >= 1 and value <=10):
+                   print("danger_level should be between 1 and 10.")
+                   sys.exit(-1)
+            except:
+                print(f"{value} should be a number between 1 and 10.")
+                sys.exit(-1)
+        
     def update_place(self, place_name, key, value):
         if key in ("name","city","danger_level","description"):
+            self.__check_restrictions(key, value)
             place = self.get_place(place_name)
             query = f"UPDATE place set {key} = ? WHERE id = ?"
             self.__cursor.execute(query, (value, place.get_id()))
@@ -61,12 +81,13 @@ class Place_to_Db():
         
     def update_all(self, search_key, search_value, replace_key, replace_value):
         if replace_key in ("name","city", "danger_level", "description"):
+            self.__check_restrictions(replace_key, replace_value)
             if search_key in ("name","city","danger_level", "description"):
                 query = f"UPDATE place SET {replace_key} = ? WHERE {search_key} = ?"
                 self.__cursor.execute(query, (replace_value, search_value))
                 self.__connection.commit()
             
-
+    
     def close(self):
         self.__cursor.close()
         self.__connection.close()

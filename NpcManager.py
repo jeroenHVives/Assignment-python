@@ -63,8 +63,29 @@ def error(message):
     print(message)
     sys.exit(-1)
 
+try:
+    arg1 = sys.argv[1]
+except:
+    #Python NpcManager.py 
+    table = input("would you like to get info about an npc or a place?(type npc or place)")
+    if table == "npc":
+       npc_name = input("What's the name of the npc you would like to get information about?")
+       n2db = Npc_to_Db.Npc_to_Db()
+       npc = n2db.get_npc(npc_name)
+       print(npc)
+       sys.exit(0)
+    elif table == "place":
+        place_name = input("What's the name of the place you would like to get information about?")
+        p2db = Place_to_Db.Place_to_Db()
+        place = p2db.get_place(place_name)
+        print(place)
+        sys.exit(0)
+    else:
+        print(f"{table} does not exist. The only tables that exist are npc and place.")
+        sys.exit(-1)
+
 #python NpcManager.py -csv table filename 
-if sys.argv[1] == "-csv":
+if arg1 == "-csv":
     if sys.argv[2] == "place":
         df = places_to_df()
         try:
@@ -80,7 +101,7 @@ if sys.argv[1] == "-csv":
     else:
         error(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
 #python NpcManager.py -excel table filename
-elif sys.argv[1] == "-excel":
+elif arg1 == "-excel":
     if sys.argv[2] == "place":
         df = places_to_df()
         try:
@@ -97,7 +118,7 @@ elif sys.argv[1] == "-excel":
     else:
         error(f"Given table {sys.argv[2]} doesn't exist. Only the tables npc and place exists.")
 #pyhon NpcManager.py -new table
-elif sys.argv[1] == "-new":
+elif arg1 == "-new":
     if sys.argv[2] == "place":
         name = input("What's the place's name?")
         if name == "":
@@ -141,7 +162,7 @@ elif sys.argv[1] == "-new":
         n2db.new_npc(npc)
 #python NpcManager.py -edit one_edit table
 #one_edit is a boolean that decides if one row or multiple rows needs to be edited 
-elif sys.argv[1] == "-edit":
+elif arg1 == "-edit":
     if sys.argv[2] == "True":
         if sys.argv[3] == "place":
             p2db = Place_to_Db.Place_to_Db()
@@ -154,6 +175,9 @@ elif sys.argv[1] == "-edit":
             npc_name = input("What's the name of the npc you would like to change?")
             key = input(f"What would you like to change about {npc_name}? (name, race, gender, age, role, place)")
             value = input(f" what should the value of {key} be instead?")
+            if key == "place":
+                p2db = Place_to_Db.Place_to_Db()
+                value = p2db.get_place(value)
             n2db.update_npc(npc_name, key, value)
         else:
             print(f"{sys.argv[3]} does not exist. The only tables that exist are npc and place.")
@@ -172,6 +196,9 @@ elif sys.argv[1] == "-edit":
             search_value = input(f"What is the current value of {search_key} you want to search for? ")
             replace_key = input("Which field would you like to update? (name, race, gender, age, role, place) ")
             replace_value = input(f"What should the new value of {replace_key} be instead? ")
+            if key == "place":
+                p2db = Place_to_Db.Place_to_Db()
+                value = p2db.get_place(value)
             n2db.update_all(search_key, search_value, replace_key, replace_value)
         else:
             print(f"{sys.argv[3]} does not exist. The only tables that exist are npc and place.")
@@ -179,30 +206,20 @@ elif sys.argv[1] == "-edit":
     else:
         print(f"{sys.argv[2]} is not a valid answer.Type True is you want to change only one row and False if you want to change multiple rows.")
 #python NpcManager.py -get table
-elif sys.argv[1] == "-get":
+elif arg1 == "-get":
     if sys.argv[2] == "place":
         p2db = Place_to_Db.Place_to_Db()
         place_name = input("What's the name of the place(s) you would like to get?")
-        p2db.get_places(place_name)
+        places = p2db.get_places(place_name)
+        for row in places:
+            print(row)
     elif sys.argv[2] == "npc":
         n2db = Npc_to_Db.Npc_to_Db()
         npc_name = input("What's the name of the npc(s) you would like to get?")
-        n2db.get_npcs(npc_name)
+        npcs = n2db.get_npcs(npc_name)
+        for row in npcs:
+            print(row)
     else:
         print(f"{sys.argv[2]} does not exist. The only tables that exist are npc and place.")
-#Python NpcManager.py 
-else:
-    table = input("would you like to get info about an npc or a place?(type npc or place)")
-    if table == "npc":
-        npc_name = input("What's the name of the npc you would like to get information about?")
-        n2db = Npc_to_Db.Npc_to_Db()
-        npc = n2db.get_npc(npc_name)
-        print(npc)
-    elif table == "npc":
-        place_name = input("What's the name of the place you would like to get information about?")
-        p2db = Place_to_Db.Place_to_Db()
-        place = p2db.get_place(place_name)
-        print(place)
-    else:
-        print(f"{table} does not exist. The only tables that exist are npc and place.")
+
      

@@ -1,4 +1,4 @@
-import sqlite3, Npc, Place_to_Db
+import sqlite3, Npc, Place_to_Db, sys
 
 class Npc_to_Db():
     def __init__(self):
@@ -39,8 +39,21 @@ class Npc_to_Db():
             self.__cursor.execute(query, (npc.get_name(), npc.get_race(), npc.get_gender(), npc.get_age(), npc.get_role(), None))
         self.__connection.commit()
         
+    def __constrain_check(self, key, value):
+        if key == "gender":
+            if not (value == "M" or value == "F" or value == "X"):
+                print(f'{value} is not valid. gender can only be M, F and X.')
+                sys.exit(-1)
+        if key == "age":
+            try:
+                value = int(value)
+            except:
+                print(f"{value} is not a number.")
+                sys.exit(-1)
+                
     def update_npc(self, npc_name, key, value):
         if key in ("name", "race", "gender", "age", "role"):
+            self.__constrain_check(key, value)
             npc = self.get_npc(npc_name)
             query = f"UPDATE npc set {key} = ? WHERE id = ?"
             self.__cursor.execute(query, (value, npc.get_id()))
@@ -54,6 +67,7 @@ class Npc_to_Db():
         
     def update_all(self, search_key, search_value, replace_key, replace_value):
         if replace_key in ("name", "race", "gender", "age", "role"):
+            self.__constrain_check(replace_key, replace_value)
             if search_key in ("name", "race", "gender", "age", "role"):
                 query = f"UPDATE npc SET {replace_key} = ? WHERE {search_key} = ?"
                 self.__cursor.execute(query, (replace_value, search_value))
